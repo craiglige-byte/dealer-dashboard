@@ -771,7 +771,7 @@ var radarChart = echarts.init(document.getElementById('radarChart'));
 function renderRadar(data) {
   radarChart.setOption({
     legend: {
-      data: ['实际达成', '目标（100）'],
+      data: ['实际达成', '目标'],
       bottom: 0
     },
     radar: {
@@ -787,7 +787,7 @@ function renderRadar(data) {
       type: 'radar',
       data: [
         { value: data.radar, name: '实际达成' },
-        { value: data.targetRadar, name: '目标（100）' }
+        { value: data.targetRadar, name: '目标' }
       ]
     }]
   });
@@ -803,7 +803,7 @@ function renderDetailRadar(data) {
 
   detailRadarChart.setOption({
     legend: {
-      data: ['实际达成', '目标（100）'],
+      data: ['实际达成', '目标'],
       bottom: 0
     },
     radar: {
@@ -814,7 +814,7 @@ function renderDetailRadar(data) {
       type: 'radar',
       data: [
         { value: data.details.map(function(d) { return d.val; }), name: '实际达成' },
-        { value: data.targetDetails.map(function(d) { return d.val; }), name: '目标（100）' }
+        { value: data.targetDetails.map(function(d) { return d.val; }), name: '目标' }
       ]
     }]
   });
