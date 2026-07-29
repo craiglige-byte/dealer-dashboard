@@ -308,19 +308,11 @@
     <div class="charts-section">
       <div class="card chart-card">
         <div class="chart-title">评估体系 — 大类</div>
-        <div class="legend-row">
-          <div class="legend-item"><span class="legend-dot" style="background:#3b82f6"></span>实际达成</div>
-          <div class="legend-item"><span class="legend-dot" style="background:transparent;border:2.5px solid #6b7280;"></span>目标（100）</div>
-        </div>
         <div class="chart-box" id="radarChart"></div>
       </div>
 
       <div class="card chart-card">
         <div class="chart-title">评估体系 — 分项</div>
-        <div class="legend-row">
-          <div class="legend-item"><span class="legend-dot" style="background:#3b82f6"></span>实际达成</div>
-          <div class="legend-item"><span class="legend-dot" style="background:transparent;border:2.5px solid #6b7280;"></span>目标（100）</div>
-        </div>
         <div class="chart-box" id="detailRadarChart"></div>
       </div>
     </div>
@@ -778,40 +770,24 @@ var radarChart = echarts.init(document.getElementById('radarChart'));
 
 function renderRadar(data) {
   radarChart.setOption({
-    tooltip: { show: false },
+    legend: {
+      data: ['实际达成', '目标（100）'],
+      bottom: 0
+    },
     radar: {
-      center: ['50%', '52%'], radius: '65%',
+      center: ['50%', '48%'], radius: '65%',
       indicator: [
         { name: '合规经营', max: 100 },
         { name: '业绩表现', max: 50 },
         { name: '执行能力', max: 100 },
         { name: '自身能力', max: 200 }
-      ],
-      axisName: { color: '#374151', fontSize: 14, fontWeight: 500 },
-      splitArea: { show: false },
-      splitLine: { lineStyle: { color: '#e5e7eb' } },
-      axisLine: { lineStyle: { color: '#d1d5db' } }
+      ]
     },
     series: [{
       type: 'radar',
-      emphasis: { lineStyle: { width: 4 } },
       data: [
-        {
-          value: data.radar,
-          name: '实际达成',
-          areaStyle: { color: 'rgba(59,130,246,0.15)' },
-          lineStyle: { color: '#3b82f6', width: 2 },
-          itemStyle: { color: '#3b82f6' },
-          symbol: 'circle', symbolSize: 10
-        },
-        {
-          value: data.targetRadar,
-          name: '目标',
-          symbol: 'none',
-          areaStyle: { color: 'transparent' },
-          lineStyle: { color: '#6b7280', width: 2.5 },
-          itemStyle: { color: '#6b7280' }
-        }
+        { value: data.radar, name: '实际达成' },
+        { value: data.targetRadar, name: '目标（100）' }
       ]
     }]
   });
@@ -826,49 +802,19 @@ function renderDetailRadar(data) {
   });
 
   detailRadarChart.setOption({
-    tooltip: { show: false },
+    legend: {
+      data: ['实际达成', '目标（100）'],
+      bottom: 0
+    },
     radar: {
-      center: ['50%', '50%'], radius: '68%',
-      indicator: indicators,
-      axisName: {
-        color: '#374151', fontSize: 11, fontWeight: 400,
-        formatter: function(value) {
-          var item = data.details.find(function(d) { return d.name === value; });
-          if (item) return '{' + item.cat + '|' + value + '}';
-          return value;
-        },
-        rich: {
-          '合规经营': { color: '#ef4444', fontSize: 11 },
-          '业绩表现': { color: '#3b82f6', fontSize: 11 },
-          '执行能力': { color: '#22c55e', fontSize: 11 },
-          '自身能力': { color: '#8b5cf6', fontSize: 11 }
-        }
-      },
-      splitArea: { show: false },
-      splitLine: { lineStyle: { color: '#e5e7eb' } },
-      axisLine: { lineStyle: { color: '#d1d5db' } },
-      splitNumber: 4
+      center: ['50%', '46%'], radius: '68%',
+      indicator: indicators
     },
     series: [{
       type: 'radar',
-      emphasis: { lineStyle: { width: 3 } },
       data: [
-        {
-          value: data.details.map(function(d) { return d.val; }),
-          name: '实际达成',
-          areaStyle: { color: 'rgba(59,130,246,0.12)' },
-          lineStyle: { color: '#3b82f6', width: 1.5 },
-          itemStyle: { color: '#3b82f6' },
-          symbol: 'circle', symbolSize: 10
-        },
-        {
-          value: data.targetDetails.map(function(d) { return d.val; }),
-          name: '目标',
-          symbol: 'none',
-          areaStyle: { color: 'transparent' },
-          lineStyle: { color: '#6b7280', width: 2 },
-          itemStyle: { color: '#6b7280' }
-        }
+        { value: data.details.map(function(d) { return d.val; }), name: '实际达成' },
+        { value: data.targetDetails.map(function(d) { return d.val; }), name: '目标（100）' }
       ]
     }]
   });
