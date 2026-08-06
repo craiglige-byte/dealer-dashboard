@@ -15,8 +15,12 @@ export const DetailDataTable: React.FC<DetailDataTableProps> = ({
     [currentNode.id]: true,
   });
 
-  const toggleRowExpand = (id: string, e: React.MouseEvent) => {
+  // 全国和战区层级始终展开，不可折叠
+  const isAlwaysExpanded = (level: string) => level === 'national';
+
+  const toggleRowExpand = (id: string, level: string, e: React.MouseEvent) => {
     e.stopPropagation();
+    if (isAlwaysExpanded(level)) return;
     setExpandedRowIds((prev) => ({
       ...prev,
       [id]: !prev[id],
@@ -28,7 +32,7 @@ export const DetailDataTable: React.FC<DetailDataTableProps> = ({
     depth: number = 0
   ): { node: DepartmentNode; depth: number }[] => {
     const result: { node: DepartmentNode; depth: number }[] = [{ node, depth }];
-    if (expandedRowIds[node.id] && node.children && node.children.length > 0) {
+    if ((expandedRowIds[node.id] || isAlwaysExpanded(node.level)) && node.children && node.children.length > 0) {
       for (const child of node.children) {
         result.push(...buildFlatDisplayRows(child, depth + 1));
       }
@@ -145,9 +149,9 @@ export const DetailDataTable: React.FC<DetailDataTableProps> = ({
                     style={{ paddingLeft: `${depth * 20 + 16}px` }}
                   >
                     <div className="flex items-center space-x-1.5">
-                      {hasChildren ? (
+                      {hasChildren && !isAlwaysExpanded(node.level) ? (
                         <button
-                          onClick={(e) => toggleRowExpand(node.id, e)}
+                          onClick={(e) => toggleRowExpand(node.id, node.level, e)}
                           className="p-1 hover:bg-slate-100 rounded text-slate-500 hover:text-blue-600 transition-colors"
                           title={isExpanded ? '折叠下级' : '展开下级'}
                         >

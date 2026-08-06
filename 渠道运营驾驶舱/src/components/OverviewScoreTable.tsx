@@ -19,8 +19,12 @@ export const OverviewScoreTable: React.FC<OverviewScoreTableProps> = ({
   // Metric breakdown expansion state (default: empty = all collapsed)
   const [expandedMetricDeptIds, setExpandedMetricDeptIds] = useState<Record<string, boolean>>({});
 
-  const toggleDeptExpand = (id: string, e: React.MouseEvent) => {
+  // 全国和战区层级始终展开，不可折叠
+  const isAlwaysExpanded = (level: string) => level === 'national';
+
+  const toggleDeptExpand = (id: string, level: string, e: React.MouseEvent) => {
     e.stopPropagation();
+    if (isAlwaysExpanded(level)) return;
     setExpandedTreeIds((prev) => ({
       ...prev,
       [id]: !prev[id],
@@ -41,7 +45,7 @@ export const OverviewScoreTable: React.FC<OverviewScoreTableProps> = ({
     depth: number = 0
   ): { node: DepartmentNode; depth: number }[] => {
     const result: { node: DepartmentNode; depth: number }[] = [{ node, depth }];
-    if (expandedTreeIds[node.id] && node.children && node.children.length > 0) {
+    if ((expandedTreeIds[node.id] || isAlwaysExpanded(node.level)) && node.children && node.children.length > 0) {
       for (const child of node.children) {
         result.push(...buildDisplayRows(child, depth + 1));
       }
@@ -132,9 +136,9 @@ export const OverviewScoreTable: React.FC<OverviewScoreTableProps> = ({
                       rowSpan={showMetrics ? METRIC_CRITERIA.length + 1 : 1}
                     >
                       <div className="flex items-center space-x-2">
-                        {hasChildren ? (
+                        {hasChildren && !isAlwaysExpanded(node.level) ? (
                           <button
-                            onClick={(e) => toggleDeptExpand(node.id, e)}
+                            onClick={(e) => toggleDeptExpand(node.id, node.level, e)}
                             className="p-1 hover:bg-slate-200/80 rounded text-slate-500 hover:text-blue-600 transition-colors"
                             title={isExpanded ? '折叠下级部门' : '展开下级部门'}
                           >
