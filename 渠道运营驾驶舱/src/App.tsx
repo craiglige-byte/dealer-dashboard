@@ -93,6 +93,13 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-slate-100 text-slate-800 flex flex-col font-sans antialiased">
+      {/* Header */}
+      <header className="bg-slate-900 text-white py-5 px-6 shadow-md">
+        <div className="max-w-[1700px] mx-auto">
+          <h1 className="text-xl font-bold tracking-wide">渠道经营驾驶舱</h1>
+        </div>
+      </header>
+
       {/* Main Container */}
       <main className="flex-1 max-w-[1700px] w-full mx-auto px-4 py-6">
         {/* Table 1: 上面的表 - 总表 */}
