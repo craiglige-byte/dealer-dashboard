@@ -505,32 +505,3 @@ export function findNodeById(root: DepartmentNode, id: string): DepartmentNode |
   }
   return null;
 }
-
-export function getBreadcrumbs(root: DepartmentNode, targetId: string): DepartmentNode[] {
-  const path: DepartmentNode[] = [];
-
-  function search(node: DepartmentNode): boolean {
-    path.push(node);
-    if (node.id === targetId) return true;
-    if (node.children) {
-      for (const child of node.children) {
-        if (search(child)) return true;
-      }
-    }
-    path.pop();
-    return false;
-  }
-
-  search(root);
-  return path;
-}
-
-export function getAllNodesFlat(root: DepartmentNode): DepartmentNode[] {
-  const list: DepartmentNode[] = [root];
-  if (root.children) {
-    for (const child of root.children) {
-      list.push(...getAllNodesFlat(child));
-    }
-  }
-  return list;
-}
