@@ -69,14 +69,11 @@ export const DetailDataTable: React.FC<DetailDataTableProps> = ({
               <th colSpan={3} className="py-2.5 px-3 border-r border-slate-200 bg-slate-200/50 text-slate-800 font-bold">基础情况</th>
               <th colSpan={5} className="py-2.5 px-3 border-r border-slate-200 bg-blue-50/60 text-blue-950 font-bold">履约情况</th>
               <th colSpan={5} className="py-2.5 px-3 border-r border-slate-200 bg-amber-50/60 text-amber-950 font-bold">分销情况</th>
-              <th colSpan={5} className="py-2.5 px-3 border-r border-slate-200 bg-slate-200/50 text-slate-800 font-bold">库存</th>
+              <th colSpan={3} className="py-2.5 px-3 border-r border-slate-200 bg-slate-200/50 text-slate-800 font-bold">库存</th>
               <th colSpan={4} className="py-2.5 px-3 border-r border-slate-200 bg-rose-50/60 text-rose-950 font-bold">窜货</th>
-              <th colSpan={2} className="py-2.5 px-3 border-r border-slate-200 bg-indigo-50/60 text-indigo-950 font-bold">预付款资金</th>
-              <th colSpan={3} className="py-2.5 px-3 border-r border-slate-200 bg-slate-200/50 text-slate-800 font-bold">专职人员</th>
+              <th colSpan={1} className="py-2.5 px-3 border-r border-slate-200 bg-indigo-50/60 text-indigo-950 font-bold">预付款资金</th>
+              <th colSpan={1} className="py-2.5 px-3 border-r border-slate-200 bg-slate-200/50 text-slate-800 font-bold">专职人员</th>
               <th colSpan={4} className="py-2.5 px-3 border-r border-slate-200 bg-emerald-50/60 text-emerald-950 font-bold">利润情况</th>
-              <th colSpan={2} className="py-2.5 px-3 border-r border-slate-200 bg-purple-50/60 text-purple-950 font-bold">执行情况</th>
-              <th colSpan={2} className="py-2.5 px-3 border-r border-slate-200 bg-slate-200/50 text-slate-800 font-bold">返利</th>
-              <th colSpan={2} className="py-2.5 px-3 border-r border-slate-200 bg-amber-50/60 text-amber-950 font-bold">整改</th>
             </tr>
 
             {/* Header Level 2 Sub-columns */}
@@ -104,8 +101,6 @@ export const DetailDataTable: React.FC<DetailDataTableProps> = ({
               <th className="py-2.5 px-3 border-r border-slate-200">库存天数</th>
               <th className="py-2.5 px-3 border-r border-slate-200">库存合格占比</th>
               <th className="py-2.5 px-3 border-r border-slate-200">(季度)绿牌占比</th>
-              <th className="py-2.5 px-3 border-r border-slate-200">库存差异率(分品类)</th>
-              <th className="py-2.5 px-3 border-r border-slate-200">库存差异占比</th>
               {/* 窜货 */}
               <th className="py-2.5 px-3 border-r border-slate-200 text-slate-800">≥5次</th>
               <th className="py-2.5 px-3 border-r border-slate-200 text-slate-800">3-4次</th>
@@ -113,25 +108,13 @@ export const DetailDataTable: React.FC<DetailDataTableProps> = ({
               <th className="py-2.5 px-3 border-r border-slate-200 text-slate-800">0次</th>
               {/* 预付款资金 */}
               <th className="py-2.5 px-3 border-r border-slate-200">当月月初预付款合格率</th>
-              <th className="py-2.5 px-3 border-r border-slate-200">YTM合格率</th>
               {/* 专职人员 */}
-              <th className="py-2.5 px-3 border-r border-slate-200">户均人数</th>
-              <th className="py-2.5 px-3 border-r border-slate-200">在岗率</th>
               <th className="py-2.5 px-3 border-r border-slate-200">合格率</th>
               {/* 利润情况 */}
               <th className="py-2.5 px-3 border-r border-slate-200">当月回顾月净利润率</th>
               <th className="py-2.5 px-3 border-r border-slate-200">当月回顾月毛利率</th>
               <th className="py-2.5 px-3 border-r border-slate-200">YTM净利润率</th>
               <th className="py-2.5 px-3 border-r border-slate-200">YTM毛利率</th>
-              {/* 执行情况 */}
-              <th className="py-2.5 px-3 border-r border-slate-200">汇财赋得分</th>
-              <th className="py-2.5 px-3 border-r border-slate-200">会员体系得分</th>
-              {/* 返利 */}
-              <th className="py-2.5 px-3 border-r border-slate-200">常规季度获得率</th>
-              <th className="py-2.5 px-3 border-r border-slate-200">额外季度获得率</th>
-              {/* 整改 */}
-              <th className="py-2.5 px-3 border-r border-slate-200">上季度整改占比</th>
-              <th className="py-2.5 px-3 border-r border-slate-200">YTM整改占比</th>
             </tr>
           </thead>
 
@@ -197,8 +180,6 @@ export const DetailDataTable: React.FC<DetailDataTableProps> = ({
                   <td className="py-3 px-3 text-right border-r border-slate-200">{details.inventory.inventoryDays} 天</td>
                   <td className="py-3 px-3 text-right border-r border-slate-200">{details.inventory.inventoryQualifiedRatio}%</td>
                   <td className="py-3 px-3 text-right border-r border-slate-200">{details.inventory.quarterlyGreenBadgeRatio}%</td>
-                  <td className="py-3 px-3 text-right border-r border-slate-200">{details.inventory.inventoryDiscrepancyRateByCategory}%</td>
-                  <td className="py-3 px-3 text-right border-r border-slate-200">{details.inventory.inventoryDiscrepancyRatio}%</td>
 
                   {/* 窜货 */}
                   <td className="py-3 px-3 text-right border-r border-slate-200 text-slate-800">{details.crossRegionSales.times5Plus}</td>
@@ -208,11 +189,8 @@ export const DetailDataTable: React.FC<DetailDataTableProps> = ({
 
                   {/* 预付款资金 */}
                   <td className="py-3 px-3 text-right border-r border-slate-200">{details.advancePayment.monthlyStartQualifiedRate}%</td>
-                  <td className="py-3 px-3 text-right border-r border-slate-200">{details.advancePayment.ytmQualifiedRate}%</td>
 
                   {/* 专职人员 */}
-                  <td className="py-3 px-3 text-right border-r border-slate-200">{details.dedicatedStaff.avgStaffCount} 人</td>
-                  <td className="py-3 px-3 text-right border-r border-slate-200">{details.dedicatedStaff.onDutyRate}%</td>
                   <td className="py-3 px-3 text-right border-r border-slate-200">{details.dedicatedStaff.qualificationRate}%</td>
 
                   {/* 利润情况 */}
@@ -221,17 +199,6 @@ export const DetailDataTable: React.FC<DetailDataTableProps> = ({
                   <td className="py-3 px-3 text-right border-r border-slate-200">{details.profitability.ytmNetProfitMargin}%</td>
                   <td className="py-3 px-3 text-right border-r border-slate-200">{details.profitability.ytmGrossProfitMargin}%</td>
 
-                  {/* 执行情况 */}
-                  <td className="py-3 px-3 text-right border-r border-slate-200">{details.execution.huiCaiFuScore}</td>
-                  <td className="py-3 px-3 text-right border-r border-slate-200">{details.execution.memberSystemScore}</td>
-
-                  {/* 返利 */}
-                  <td className="py-3 px-3 text-right border-r border-slate-200">{details.rebates.regularQuarterlyRate}%</td>
-                  <td className="py-3 px-3 text-right border-r border-slate-200">{details.rebates.extraQuarterlyRate}%</td>
-
-                  {/* 整改 */}
-                  <td className="py-3 px-3 text-right border-r border-slate-200">{details.rectification.lastQuarterRectificationRatio}%</td>
-                  <td className="py-3 px-3 text-right border-r border-slate-200">{details.rectification.ytmRectificationRatio}%</td>
                 </tr>
               );
             })}
