@@ -213,7 +213,7 @@ export const OverviewScoreTable: React.FC<OverviewScoreTableProps> = ({
 
                           {/* Criterion Max Score */}
                           <td className="py-2 px-5 border-r border-slate-200 text-right text-slate-500 font-normal">
-                            {criterion.maxScore} 分
+                            {criterion.standard}
                           </td>
 
                         </tr>

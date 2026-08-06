@@ -116,6 +116,7 @@ export interface MetricCriterion {
   valueKey: keyof DepartmentNode['scores'];
   name: string;
   maxScore: number;
+  standard: string;
   benchmark: string;
   unit: string;
   description: string;
