@@ -1,0 +1,6 @@
+{
+  "name": "渠道运营驾驶舱",
+  "description": "包含渠道运营总分评估与多维度明细数据的可视化驾驶舱，支持全国、战区、作战部、作战分部四级动态下钻分析与导出。",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
