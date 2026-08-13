@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { DepartmentNode, METRIC_CRITERIA } from '../data/channelData';
+import React, { useMemo, useState } from 'react';
+import { DepartmentNode, METRIC_CRITERIA, NATIONAL_ROOT, collectAllNodes, getQuartileColor } from '../data/channelData';
 import { ChevronRight, ChevronDown } from 'lucide-react';
 
 interface OverviewScoreTableProps {
@@ -18,6 +18,17 @@ export const OverviewScoreTable: React.FC<OverviewScoreTableProps> = ({
 
   // Metric breakdown expansion state (default: empty = all collapsed)
   const [expandedMetricDeptIds, setExpandedMetricDeptIds] = useState<Record<string, boolean>>({});
+
+  // 分位计算：基于全国整棵树所有节点的指标分布
+  const allNodes = useMemo(() => collectAllNodes(NATIONAL_ROOT), []);
+  const totalScoreValues = useMemo(() => allNodes.map((n) => n.scores.totalScore), [allNodes]);
+  const metricScoreValues = useMemo(() => {
+    const map: Record<string, number[]> = {};
+    for (const criterion of METRIC_CRITERIA) {
+      map[criterion.key] = allNodes.map((n) => n.scores[criterion.key] as number);
+    }
+    return map;
+  }, [allNodes]);
 
   // 全国和战区层级始终展开，不可折叠
   const isAlwaysExpanded = (level: string) => level === 'national';
@@ -114,9 +125,6 @@ export const OverviewScoreTable: React.FC<OverviewScoreTableProps> = ({
               <th className="py-3.5 px-5 border-r border-slate-200 text-right w-36">
                 实际分值
               </th>
-              <th className="py-3.5 px-5 border-r border-slate-200 text-right w-36">
-                满分标准
-              </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-200 text-slate-800">
@@ -181,12 +189,13 @@ export const OverviewScoreTable: React.FC<OverviewScoreTableProps> = ({
 
                     {/* Total Score */}
                     <td className="py-3.5 px-5 border-r border-slate-200 text-right font-extrabold text-blue-600 text-base">
-                      {node.scores.totalScore}
-                    </td>
-
-                    {/* Standard Score */}
-                    <td className="py-3.5 px-5 border-r border-slate-200 text-right text-slate-600 font-medium">
-                      100 分
+                      <div className="flex items-center justify-end gap-2">
+                        <span
+                          className="inline-block w-2.5 h-2.5 rounded-full shrink-0"
+                          style={{ backgroundColor: getQuartileColor(node.scores.totalScore, totalScoreValues) }}
+                        />
+                        <span>{node.scores.totalScore}</span>
+                      </div>
                     </td>
 
                   </tr>
@@ -208,12 +217,13 @@ export const OverviewScoreTable: React.FC<OverviewScoreTableProps> = ({
 
                           {/* Criterion Actual Score */}
                           <td className="py-2 px-5 border-r border-slate-200 text-right font-bold text-slate-900">
-                            {score}
-                          </td>
-
-                          {/* Criterion Max Score */}
-                          <td className="py-2 px-5 border-r border-slate-200 text-right text-slate-500 font-normal">
-                            {criterion.standard}
+                            <div className="flex items-center justify-end gap-2">
+                              <span
+                                className="inline-block w-2 h-2 rounded-full shrink-0"
+                                style={{ backgroundColor: getQuartileColor(score, metricScoreValues[criterion.key]) }}
+                              />
+                              <span>{score}</span>
+                            </div>
                           </td>
 
                         </tr>

@@ -34,13 +34,21 @@ export interface DepartmentNode {
     totalContractAmount: number; // 合同总额 (万元)
     avgAccountVolume: number; // 户均体量 (万元/户)
 
-    // 履约情况 (经销商规模梯队分布)
+    // 履约情况 (经销商规模梯队分布，用于「300万以上经销商占比」指标计算)
     complianceTiers: {
       over10M: number; // ≥1000万 (家)
       m5To10M: number; // 500-1000万 (家)
       m3To5M: number; // 300-500万 (家)
       m2To3M: number; // 200-300万 (家)
       under2M: number; // ＜200万 (家)
+    };
+
+    // YTM履约情况 (经销商履约达标率分布, 占比 %)
+    ytmComplianceTiers: {
+      over100Pct: number; // ≥100%经销商占比 (%)
+      m90to100Pct: number; // 90%-100%经销商占比 (%)
+      m80to90Pct: number; // 80%-90%经销商占比 (%)
+      under80Pct: number; // <80%经销商占比 (%)
     };
 
     // 分销情况
@@ -56,17 +64,17 @@ export interface DepartmentNode {
     inventory: {
       inventoryDays: number; // 库存天数 (天)
       inventoryQualifiedRatio: number; // 库存合格占比 (%)
-      quarterlyGreenBadgeRatio: number; // (季度)绿牌占比 (%)
+      quarterlyGreenBadgeRatio: number; // 绿牌占比 (%)
       inventoryDiscrepancyRateByCategory: number; // 库存差异率(分品类) (%)
       inventoryDiscrepancyRatio: number; // 库存差异占比 (%)
     };
 
-    // 窜货
+    // 窜货及低价次数
     crossRegionSales: {
-      times5Plus: number; // ≥5次 (家)
-      times3To4: number; // 3-4次 (家)
-      times1To2: number; // 1-2次 (家)
-      times0: number; // 0次 (家)
+      onlineCrossRegion: number; // 线上窜货 (家)
+      offlineLevel1: number; // 线下一级窜货 (家)
+      offlineLevel2: number; // 线下二级窜货 (家)
+      lowPrice: number; // 低价 (家)
     };
 
     // 预付款资金

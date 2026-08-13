@@ -2,6 +2,42 @@ import { DepartmentNode, MetricCriterion } from '../types';
 
 export type { DepartmentNode };
 
+// 收集整棵树所有节点（含根与所有后代），用于分位计算
+export function collectAllNodes(root: DepartmentNode): DepartmentNode[] {
+  const result: DepartmentNode[] = [root];
+  if (root.children) {
+    for (const child of root.children) {
+      result.push(...collectAllNodes(child));
+    }
+  }
+  return result;
+}
+
+// 分位数（线性插值），sorted 为升序数组
+function quantile(sorted: number[], q: number): number {
+  if (sorted.length === 0) return 0;
+  if (sorted.length === 1) return sorted[0];
+  const pos = (sorted.length - 1) * q;
+  const base = Math.floor(pos);
+  const rest = pos - base;
+  if (base + 1 < sorted.length) {
+    return sorted[base] + rest * (sorted[base + 1] - sorted[base]);
+  }
+  return sorted[base];
+}
+
+// 颜色灯：按分位值四档（top25%绿 → 25-50%黄 → 50-75%橙 → 75%以上红）
+export function getQuartileColor(value: number, values: number[]): string {
+  const sorted = [...values].sort((a, b) => a - b);
+  const q1 = quantile(sorted, 0.25);
+  const q2 = quantile(sorted, 0.5);
+  const q3 = quantile(sorted, 0.75);
+  if (value >= q3) return '#22c55e'; // 绿（最高25%）
+  if (value >= q2) return '#eab308'; // 黄（25-50%）
+  if (value >= q1) return '#f97316'; // 橙（50-75%）
+  return '#ef4444'; // 红（最低25%）
+}
+
 // Table 1 Judgment Criteria Metadata
 export const METRIC_CRITERIA: MetricCriterion[] = [
   {
@@ -130,6 +166,12 @@ function createBranchNode(
   const advancePaymentQualifiedRateValue = Number((88 + Math.random() * 10).toFixed(1));
   const over3MDealerRatioValue = Number((((over10M + m5To10M + m3To5M) / dealerCount) * 100).toFixed(1));
 
+  // YTM履约达标率分布 (占比 %，四档合计 100%)
+  const ytmOver100 = Math.round(20 + Math.random() * 15);
+  const ytm90to100 = Math.round(30 + Math.random() * 15);
+  const ytm80to90 = Math.round(15 + Math.random() * 10);
+  const ytmUnder80 = 100 - ytmOver100 - ytm90to100 - ytm80to90;
+
   const cScore = calculateScore('complianceRatio', complianceRatioValue);
   const iScore = calculateScore('inventoryQualifiedRatio', inventoryQualifiedRatioValue);
   const cmScore = calculateScore('cityManagerAvgScore', cityManagerAvgScoreValue);
@@ -173,6 +215,12 @@ function createBranchNode(
         m2To3M,
         under2M,
       },
+      ytmComplianceTiers: {
+        over100Pct: ytmOver100,
+        m90to100Pct: ytm90to100,
+        m80to90Pct: ytm80to90,
+        under80Pct: ytmUnder80,
+      },
       distributionChannels: {
         selfOperatedRatio: 18,
         outletRatio: 42,
@@ -188,10 +236,10 @@ function createBranchNode(
         inventoryDiscrepancyRatio: Number((0.8 + Math.random() * 1.5).toFixed(1)),
       },
       crossRegionSales: {
-        times5Plus: Math.round(dealerCount * 0.02),
-        times3To4: Math.round(dealerCount * 0.05),
-        times1To2: Math.round(dealerCount * 0.12),
-        times0: Math.round(dealerCount * 0.81),
+        onlineCrossRegion: Math.round(dealerCount * (0.03 + Math.random() * 0.04)),
+        offlineLevel1: Math.round(dealerCount * (0.06 + Math.random() * 0.05)),
+        offlineLevel2: Math.round(dealerCount * (0.10 + Math.random() * 0.06)),
+        lowPrice: Math.round(dealerCount * (0.08 + Math.random() * 0.06)),
       },
       advancePayment: {
         monthlyStartQualifiedRate: advancePaymentQualifiedRateValue,
@@ -305,6 +353,20 @@ function aggregateChildren(
         m2To3M,
         under2M,
       },
+      ytmComplianceTiers: {
+        over100Pct: dealerCount
+          ? Math.round(children.reduce((acc, c) => acc + c.details.ytmComplianceTiers.over100Pct * c.details.dealerCount, 0) / dealerCount)
+          : 0,
+        m90to100Pct: dealerCount
+          ? Math.round(children.reduce((acc, c) => acc + c.details.ytmComplianceTiers.m90to100Pct * c.details.dealerCount, 0) / dealerCount)
+          : 0,
+        m80to90Pct: dealerCount
+          ? Math.round(children.reduce((acc, c) => acc + c.details.ytmComplianceTiers.m80to90Pct * c.details.dealerCount, 0) / dealerCount)
+          : 0,
+        under80Pct: dealerCount
+          ? Math.round(children.reduce((acc, c) => acc + c.details.ytmComplianceTiers.under80Pct * c.details.dealerCount, 0) / dealerCount)
+          : 0,
+      },
       distributionChannels: {
         selfOperatedRatio: avgVal((c) => c.details.distributionChannels.selfOperatedRatio),
         outletRatio: avgVal((c) => c.details.distributionChannels.outletRatio),
@@ -320,10 +382,10 @@ function aggregateChildren(
         inventoryDiscrepancyRatio: avgVal((c) => c.details.inventory.inventoryDiscrepancyRatio),
       },
       crossRegionSales: {
-        times5Plus: children.reduce((acc, c) => acc + c.details.crossRegionSales.times5Plus, 0),
-        times3To4: children.reduce((acc, c) => acc + c.details.crossRegionSales.times3To4, 0),
-        times1To2: children.reduce((acc, c) => acc + c.details.crossRegionSales.times1To2, 0),
-        times0: children.reduce((acc, c) => acc + c.details.crossRegionSales.times0, 0),
+        onlineCrossRegion: children.reduce((acc, c) => acc + c.details.crossRegionSales.onlineCrossRegion, 0),
+        offlineLevel1: children.reduce((acc, c) => acc + c.details.crossRegionSales.offlineLevel1, 0),
+        offlineLevel2: children.reduce((acc, c) => acc + c.details.crossRegionSales.offlineLevel2, 0),
+        lowPrice: children.reduce((acc, c) => acc + c.details.crossRegionSales.lowPrice, 0),
       },
       advancePayment: {
         monthlyStartQualifiedRate: advancePaymentQualifiedRateValue,

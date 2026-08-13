@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { DepartmentNode } from '../types';
+import { NATIONAL_ROOT, collectAllNodes, getQuartileColor } from '../data/channelData';
 import { ChevronRight, ChevronDown } from 'lucide-react';
 
 interface DetailDataTableProps {
@@ -14,6 +15,12 @@ export const DetailDataTable: React.FC<DetailDataTableProps> = ({
   const [expandedRowIds, setExpandedRowIds] = useState<Record<string, boolean>>({
     [currentNode.id]: true,
   });
+
+  // 分位计算：基于全国整棵树所有节点
+  const allNodes = useMemo(() => collectAllNodes(NATIONAL_ROOT), []);
+  const over100Values = useMemo(() => allNodes.map((n) => n.details.ytmComplianceTiers.over100Pct), [allNodes]);
+  const selfOperatedValues = useMemo(() => allNodes.map((n) => n.details.distributionChannels.selfOperatedRatio), [allNodes]);
+  const qualifiedRateValues = useMemo(() => allNodes.map((n) => n.details.advancePayment.monthlyStartQualifiedRate), [allNodes]);
 
   // 全国和战区层级始终展开，不可折叠
   const isAlwaysExpanded = (level: string) => level === 'national';
@@ -67,12 +74,12 @@ export const DetailDataTable: React.FC<DetailDataTableProps> = ({
                 部门
               </th>
               <th colSpan={3} className="py-2.5 px-3 border-r border-slate-200 bg-slate-200/50 text-slate-800 font-bold">基础情况</th>
-              <th colSpan={5} className="py-2.5 px-3 border-r border-slate-200 bg-blue-50/60 text-blue-950 font-bold">履约情况</th>
-              <th colSpan={5} className="py-2.5 px-3 border-r border-slate-200 bg-amber-50/60 text-amber-950 font-bold">分销情况</th>
-              <th colSpan={2} className="py-2.5 px-3 border-r border-slate-200 bg-slate-200/50 text-slate-800 font-bold">库存</th>
-              <th colSpan={4} className="py-2.5 px-3 border-r border-slate-200 bg-rose-50/60 text-rose-950 font-bold">窜货</th>
-              <th colSpan={1} className="py-2.5 px-3 border-r border-slate-200 bg-indigo-50/60 text-indigo-950 font-bold">预付款资金</th>
-              <th colSpan={1} className="py-2.5 px-3 border-r border-slate-200 bg-slate-200/50 text-slate-800 font-bold">专职人员</th>
+              <th colSpan={4} className="py-2.5 px-3 border-r border-slate-200 bg-blue-50/60 text-blue-950 font-bold">YTM履约情况</th>
+              <th colSpan={5} className="py-2.5 px-3 border-r border-slate-200 bg-amber-50/60 text-amber-950 font-bold">分销渠道占比</th>
+              <th colSpan={2} className="py-2.5 px-3 border-r border-slate-200 bg-slate-200/50 text-slate-800 font-bold">库存情况</th>
+              <th colSpan={4} className="py-2.5 px-3 border-r border-slate-200 bg-rose-50/60 text-rose-950 font-bold">窜货及低价次数</th>
+              <th colSpan={1} className="py-2.5 px-3 border-r border-slate-200 bg-indigo-50/60 text-indigo-950 font-bold">月初预付款情况</th>
+              <th colSpan={1} className="py-2.5 px-3 border-r border-slate-200 bg-slate-200/50 text-slate-800 font-bold">专职人员情况</th>
               <th colSpan={4} className="py-2.5 px-3 border-r border-slate-200 bg-emerald-50/60 text-emerald-950 font-bold">利润情况</th>
             </tr>
 
@@ -85,35 +92,34 @@ export const DetailDataTable: React.FC<DetailDataTableProps> = ({
               <th className="py-2.5 px-3 border-r border-slate-200 min-w-[100px]">经销商数量(家)</th>
               <th className="py-2.5 px-3 border-r border-slate-200 min-w-[120px]">合同总额(万元)</th>
               <th className="py-2.5 px-3 border-r border-slate-200 min-w-[110px]">户均体量(万元)</th>
-              {/* 履约情况 */}
-              <th className="py-2.5 px-3 border-r border-slate-200">≥1000万</th>
-              <th className="py-2.5 px-3 border-r border-slate-200">500-1000万</th>
-              <th className="py-2.5 px-3 border-r border-slate-200">300-500万</th>
-              <th className="py-2.5 px-3 border-r border-slate-200">200-300万</th>
-              <th className="py-2.5 px-3 border-r border-slate-200">＜200万</th>
-              {/* 分销情况 */}
-              <th className="py-2.5 px-3 border-r border-slate-200">自营占比</th>
-              <th className="py-2.5 px-3 border-r border-slate-200">网点占比</th>
-              <th className="py-2.5 px-3 border-r border-slate-200">批发占比</th>
-              <th className="py-2.5 px-3 border-r border-slate-200">分销占比</th>
-              <th className="py-2.5 px-3 border-r border-slate-200">其他占比</th>
-              {/* 库存 */}
+              {/* YTM履约情况 */}
+              <th className="py-2.5 px-3 border-r border-slate-200">≥100%经销商占比</th>
+              <th className="py-2.5 px-3 border-r border-slate-200">90%-100%经销商占比</th>
+              <th className="py-2.5 px-3 border-r border-slate-200">80%-90%经销商占比</th>
+              <th className="py-2.5 px-3 border-r border-slate-200">＜80%经销商占比</th>
+              {/* 分销渠道占比 */}
+              <th className="py-2.5 px-3 border-r border-slate-200">自营</th>
+              <th className="py-2.5 px-3 border-r border-slate-200">直销网点</th>
+              <th className="py-2.5 px-3 border-r border-slate-200">批发商</th>
+              <th className="py-2.5 px-3 border-r border-slate-200">分销商</th>
+              <th className="py-2.5 px-3 border-r border-slate-200">其他</th>
+              {/* 库存情况 */}
               <th className="py-2.5 px-3 border-r border-slate-200">库存天数</th>
-              <th className="py-2.5 px-3 border-r border-slate-200">(季度)绿牌占比</th>
-              {/* 窜货 */}
-              <th className="py-2.5 px-3 border-r border-slate-200 text-slate-800">≥5次</th>
-              <th className="py-2.5 px-3 border-r border-slate-200 text-slate-800">3-4次</th>
-              <th className="py-2.5 px-3 border-r border-slate-200 text-slate-800">1-2次</th>
-              <th className="py-2.5 px-3 border-r border-slate-200 text-slate-800">0次</th>
-              {/* 预付款资金 */}
-              <th className="py-2.5 px-3 border-r border-slate-200">当月月初预付款合格率</th>
-              {/* 专职人员 */}
+              <th className="py-2.5 px-3 border-r border-slate-200">绿牌占比</th>
+              {/* 窜货及低价次数 */}
+              <th className="py-2.5 px-3 border-r border-slate-200 text-slate-800">线上窜货</th>
+              <th className="py-2.5 px-3 border-r border-slate-200 text-slate-800">线下一级窜货</th>
+              <th className="py-2.5 px-3 border-r border-slate-200 text-slate-800">线下二级窜货</th>
+              <th className="py-2.5 px-3 border-r border-slate-200 text-slate-800">低价</th>
+              {/* 月初预付款情况 */}
+              <th className="py-2.5 px-3 border-r border-slate-200">经销商合格率</th>
+              {/* 专职人员情况 */}
               <th className="py-2.5 px-3 border-r border-slate-200">合格率</th>
               {/* 利润情况 */}
-              <th className="py-2.5 px-3 border-r border-slate-200">当月回顾月净利润率</th>
-              <th className="py-2.5 px-3 border-r border-slate-200">当月回顾月毛利率</th>
-              <th className="py-2.5 px-3 border-r border-slate-200">YTM净利润率</th>
-              <th className="py-2.5 px-3 border-r border-slate-200">YTM毛利率</th>
+              <th className="py-2.5 px-3 border-r border-slate-200">当月回顾毛利率</th>
+              <th className="py-2.5 px-3 border-r border-slate-200">当月回顾净利润</th>
+              <th className="py-2.5 px-3 border-r border-slate-200">YTM回顾毛利率</th>
+              <th className="py-2.5 px-3 border-r border-slate-200">YTM回顾净利率</th>
             </tr>
           </thead>
 
@@ -161,41 +167,55 @@ export const DetailDataTable: React.FC<DetailDataTableProps> = ({
                   <td className="py-3 px-3 text-right border-r border-slate-200 font-bold text-slate-900">{details.totalContractAmount.toLocaleString()}</td>
                   <td className="py-3 px-3 text-right border-r border-slate-200 text-slate-800">{details.avgAccountVolume}</td>
 
-                  {/* 履约情况 */}
-                  <td className="py-3 px-3 text-right border-r border-slate-200">{details.complianceTiers.over10M}</td>
-                  <td className="py-3 px-3 text-right border-r border-slate-200">{details.complianceTiers.m5To10M}</td>
-                  <td className="py-3 px-3 text-right border-r border-slate-200">{details.complianceTiers.m3To5M}</td>
-                  <td className="py-3 px-3 text-right border-r border-slate-200">{details.complianceTiers.m2To3M}</td>
-                  <td className="py-3 px-3 text-right border-r border-slate-200">{details.complianceTiers.under2M}</td>
+                  {/* YTM履约情况 */}
+                  <td className="py-3 px-3 text-right border-r border-slate-200">
+                    <div className="flex items-center justify-end gap-1.5">
+                      <span className="inline-block w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: getQuartileColor(details.ytmComplianceTiers.over100Pct, over100Values) }} />
+                      <span>{details.ytmComplianceTiers.over100Pct}%</span>
+                    </div>
+                  </td>
+                  <td className="py-3 px-3 text-right border-r border-slate-200">{details.ytmComplianceTiers.m90to100Pct}%</td>
+                  <td className="py-3 px-3 text-right border-r border-slate-200">{details.ytmComplianceTiers.m80to90Pct}%</td>
+                  <td className="py-3 px-3 text-right border-r border-slate-200">{details.ytmComplianceTiers.under80Pct}%</td>
 
-                  {/* 分销情况 */}
-                  <td className="py-3 px-3 text-right border-r border-slate-200">{details.distributionChannels.selfOperatedRatio}%</td>
+                  {/* 分销渠道占比 */}
+                  <td className="py-3 px-3 text-right border-r border-slate-200">
+                    <div className="flex items-center justify-end gap-1.5">
+                      <span className="inline-block w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: getQuartileColor(details.distributionChannels.selfOperatedRatio, selfOperatedValues) }} />
+                      <span>{details.distributionChannels.selfOperatedRatio}%</span>
+                    </div>
+                  </td>
                   <td className="py-3 px-3 text-right border-r border-slate-200">{details.distributionChannels.outletRatio}%</td>
                   <td className="py-3 px-3 text-right border-r border-slate-200">{details.distributionChannels.wholesaleRatio}%</td>
                   <td className="py-3 px-3 text-right border-r border-slate-200">{details.distributionChannels.distributorRatio}%</td>
                   <td className="py-3 px-3 text-right border-r border-slate-200">{details.distributionChannels.otherRatio}%</td>
 
-                  {/* 库存 */}
+                  {/* 库存情况 */}
                   <td className="py-3 px-3 text-right border-r border-slate-200">{details.inventory.inventoryDays} 天</td>
                   <td className="py-3 px-3 text-right border-r border-slate-200">{details.inventory.quarterlyGreenBadgeRatio}%</td>
 
-                  {/* 窜货 */}
-                  <td className="py-3 px-3 text-right border-r border-slate-200 text-slate-800">{details.crossRegionSales.times5Plus}</td>
-                  <td className="py-3 px-3 text-right border-r border-slate-200 text-slate-800">{details.crossRegionSales.times3To4}</td>
-                  <td className="py-3 px-3 text-right border-r border-slate-200 text-slate-800">{details.crossRegionSales.times1To2}</td>
-                  <td className="py-3 px-3 text-right border-r border-slate-200 text-slate-800">{details.crossRegionSales.times0}</td>
+                  {/* 窜货及低价次数 */}
+                  <td className="py-3 px-3 text-right border-r border-slate-200 text-slate-800">{details.crossRegionSales.onlineCrossRegion}</td>
+                  <td className="py-3 px-3 text-right border-r border-slate-200 text-slate-800">{details.crossRegionSales.offlineLevel1}</td>
+                  <td className="py-3 px-3 text-right border-r border-slate-200 text-slate-800">{details.crossRegionSales.offlineLevel2}</td>
+                  <td className="py-3 px-3 text-right border-r border-slate-200 text-slate-800">{details.crossRegionSales.lowPrice}</td>
 
-                  {/* 预付款资金 */}
-                  <td className="py-3 px-3 text-right border-r border-slate-200">{details.advancePayment.monthlyStartQualifiedRate}%</td>
+                  {/* 月初预付款情况 */}
+                  <td className="py-3 px-3 text-right border-r border-slate-200">
+                    <div className="flex items-center justify-end gap-1.5">
+                      <span className="inline-block w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: getQuartileColor(details.advancePayment.monthlyStartQualifiedRate, qualifiedRateValues) }} />
+                      <span>{details.advancePayment.monthlyStartQualifiedRate}%</span>
+                    </div>
+                  </td>
 
-                  {/* 专职人员 */}
+                  {/* 专职人员情况 */}
                   <td className="py-3 px-3 text-right border-r border-slate-200">{details.dedicatedStaff.qualificationRate}%</td>
 
                   {/* 利润情况 */}
-                  <td className="py-3 px-3 text-right border-r border-slate-200">{details.profitability.monthlyReviewNetProfitMargin}%</td>
                   <td className="py-3 px-3 text-right border-r border-slate-200">{details.profitability.monthlyReviewGrossProfitMargin}%</td>
-                  <td className="py-3 px-3 text-right border-r border-slate-200">{details.profitability.ytmNetProfitMargin}%</td>
+                  <td className="py-3 px-3 text-right border-r border-slate-200">{details.profitability.monthlyReviewNetProfitMargin}%</td>
                   <td className="py-3 px-3 text-right border-r border-slate-200">{details.profitability.ytmGrossProfitMargin}%</td>
+                  <td className="py-3 px-3 text-right border-r border-slate-200">{details.profitability.ytmNetProfitMargin}%</td>
 
                 </tr>
               );
