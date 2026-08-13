@@ -1,4 +1,4 @@
-# 经销商数据看板 & 渠道经营驾驶舱
+# 经销商数据看板 & 经销商经营驾驶舱
 
 > 项目状态：🚀 持续迭代  
 > 创建日期：2026-07-22  
@@ -10,7 +10,7 @@
 
 | Demo | 技术栈 | 说明 |
 |------|--------|------|
-| 渠道经营驾驶舱 | React 19 + Vite 6 + Tailwind CSS 4 | 多级下钻分析系统（全国→战区→作战部→分部），总表+明细表 |
+| 经销商经营驾驶舱 | React 19 + Vite 6 + Tailwind CSS 4 | 多级下钻分析系统（全国→战区→作战部→分部），总表+明细表 |
 | 经销商数据看板 | 纯 HTML + ECharts 5.5 | 单经销商详情页，雷达图 + 进销存模块 |
 
 ## 项目结构
@@ -28,7 +28,7 @@
 │   └── conversations/                     ← 对话记录
 ├── prototype/
 │   └── index.html                         ← 经销商数据看板（静态原型）
-└── 渠道运营驾驶舱/                          ← 渠道经营驾驶舱（React 应用）
+└── 渠道运营驾驶舱/                          ← 经销商经营驾驶舱（React 应用）
     ├── src/
     │   ├── App.tsx
     │   ├── components/
@@ -44,7 +44,7 @@
 
 | Demo | URL |
 |------|-----|
-| 渠道经营驾驶舱 | https://craiglige-byte.github.io/dealer-dashboard/ |
+| 经销商经营驾驶舱 | https://craiglige-byte.github.io/dealer-dashboard/ |
 | 经销商数据看板 | https://craiglige-byte.github.io/dealer-dashboard/prototype/index.html |
 
 ## 运行方式
@@ -71,6 +71,7 @@ npm run build      # 构建 → dist/
 | 2026-08-05 | v1.0 | 驾驶舱 React 项目搭建，4级下钻，总表+明细表 |
 | 2026-08-06 | v1.1 | 精简驾驶舱（移除顶栏/KPI/图表），两表联动，满分标准更新 |
 | 2026-08-13 | v1.2 | 进销存品项筛选（单选 + 数据联动） |
+| 2026-08-13 | v1.3 | 驾驶舱改名「经销商经营驾驶舱」、明细表列重构、实际分值/关键指标四分位色灯 |
 
 ---
 
