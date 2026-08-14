@@ -56,7 +56,7 @@ export const DetailDataTable: React.FC<DetailDataTableProps> = ({
         <div className="flex items-center space-x-2.5">
           <div className="w-1.5 h-4 bg-blue-600 rounded-full" />
           <h2 className="text-base font-bold text-slate-900">
-            【明细表】渠道运营明细数据
+            【明细表】经销商运营明细数据
           </h2>
         </div>
         <span className="text-xs text-slate-500 font-medium">
@@ -100,8 +100,8 @@ export const DetailDataTable: React.FC<DetailDataTableProps> = ({
               {/* 分销渠道占比 */}
               <th className="py-2.5 px-3 border-r border-slate-200">自营</th>
               <th className="py-2.5 px-3 border-r border-slate-200">直销网点</th>
-              <th className="py-2.5 px-3 border-r border-slate-200">批发商</th>
-              <th className="py-2.5 px-3 border-r border-slate-200">分销商</th>
+              <th className="py-2.5 px-3 border-r border-slate-200">直销批发商</th>
+              <th className="py-2.5 px-3 border-r border-slate-200">直销分销商</th>
               <th className="py-2.5 px-3 border-r border-slate-200">其他</th>
               {/* 库存情况 */}
               <th className="py-2.5 px-3 border-r border-slate-200">库存天数</th>

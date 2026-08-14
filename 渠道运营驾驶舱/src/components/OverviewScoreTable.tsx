@@ -103,7 +103,7 @@ export const OverviewScoreTable: React.FC<OverviewScoreTableProps> = ({
         <div className="flex items-center space-x-2.5">
           <div className="w-1.5 h-4 bg-blue-600 rounded-full" />
           <h2 className="text-base font-bold text-slate-900">
-            【总表】渠道运营考核评估
+            【总表】经销商运营评估
           </h2>
         </div>
         <span className="text-xs text-slate-500 font-medium">
