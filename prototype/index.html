@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -29,6 +29,10 @@
     background: var(--bg-primary);
     color: var(--text-primary);
     min-height: 100vh;
+    margin: 0;
+  }
+
+  .main-content {
     padding: 24px;
   }
 
@@ -191,6 +195,26 @@
   .dot-low { background: #f97316; } /* ＜75% — 橙 */
   .dot-bot { background: #ef4444; } /* 后25% — 红 */
 
+  /* 品项筛选 */
+  .item-filter-row {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 20px; flex-wrap: wrap;
+  }
+  .item-filter-label {
+    font-size: 13px; font-weight: 500; color: var(--text-muted);
+  }
+  .item-filter-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+  .item-pill {
+    padding: 6px 16px; font-size: 13px; font-weight: 500;
+    border: 1px solid var(--border); border-radius: 999px;
+    background: var(--bg-card); color: var(--text-secondary);
+    cursor: pointer; transition: all 0.2s; user-select: none;
+  }
+  .item-pill:hover { border-color: var(--accent-blue); color: var(--accent-blue); }
+  .item-pill.active {
+    background: var(--accent-blue); border-color: var(--accent-blue); color: #fff;
+  }
+
   /* 进销存概览 */
   .pss-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 32px; }
   .pss-card { cursor: pointer; transition: box-shadow 0.2s; }
@@ -233,9 +257,190 @@
     .cost-grid { grid-template-columns: 1fr; }
     .other-grid { grid-template-columns: 1fr; }
   }
+
+  /* ===== 左侧导航目录 ===== */
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 220px;
+    height: 100vh;
+    background: #fff;
+    border-right: 1px solid var(--border);
+    box-shadow: 2px 0 8px rgba(0,0,0,0.04);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    padding: 24px 0 24px 0;
+  }
+
+  .sidebar-logo {
+    padding: 0 20px 20px 20px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 8px;
+  }
+  .sidebar-logo h2 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #111827;
+    line-height: 1.4;
+  }
+  .sidebar-logo .logo-sub {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  .nav-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex: 1;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 20px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s;
+    border-left: 3px solid transparent;
+    text-decoration: none;
+  }
+  .nav-item:hover {
+    background: #f8fafc;
+    color: var(--text-primary);
+  }
+  .nav-item.active {
+    color: var(--accent-blue);
+    background: #eff6ff;
+    border-left-color: var(--accent-blue);
+    font-weight: 600;
+  }
+
+  .nav-icon {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .nav-icon.n1 { background: #eff6ff; color: #3b82f6; }
+  .nav-icon.n2 { background: #fef2f2; color: #ef4444; }
+  .nav-icon.n3 { background: #f3e8ff; color: #9333ea; }
+  .nav-icon.n4 { background: #fff7ed; color: #ea580c; }
+  .nav-icon.n5 { background: #ecfdf5; color: #059669; }
+
+  /* ===== 主内容区偏移 ===== */
+  .main-content {
+    margin-left: 220px;
+  }
+
+  /* 侧边栏响应式 */
+  @media (max-width: 1100px) {
+    .sidebar {
+      width: 180px;
+    }
+    .main-content {
+      margin-left: 180px;
+    }
+    .nav-item {
+      padding: 10px 14px;
+      font-size: 12px;
+    }
+    .sidebar-logo {
+      padding: 0 14px 16px 14px;
+    }
+    .sidebar-logo h2 {
+      font-size: 14px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .sidebar {
+      position: relative;
+      width: 100%;
+      height: auto;
+      flex-direction: row;
+      flex-wrap: wrap;
+      padding: 12px 8px;
+      border-right: none;
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+      gap: 4px;
+      justify-content: center;
+    }
+    .sidebar-logo {
+      width: 100%;
+      text-align: center;
+      padding: 0 0 10px 0;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 4px;
+    }
+    .nav-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      justify-content: center;
+    }
+    .nav-item {
+      padding: 8px 14px;
+      font-size: 12px;
+      border-radius: 6px;
+      border-left: none;
+      white-space: nowrap;
+    }
+    .nav-item.active {
+      background: #eff6ff;
+      color: var(--accent-blue);
+      border-left: none;
+    }
+    .main-content {
+      margin-left: 0;
+    }
+    body {
+      padding: 16px 12px;
+    }
+  }
 </style>
 </head>
 <body>
+
+<!-- ===== 左侧导航目录 ===== -->
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <h2>经销商数据看板</h2>
+    <div class="logo-sub">Dealer Performance Cockpit</div>
+  </div>
+  <ul class="nav-list">
+    <li class="nav-item" data-target="section-basic" onclick="scrollToSection('section-basic')">
+      <span class="nav-icon n1">1</span> 经销商基础信息
+    </li>
+    <li class="nav-item" data-target="section-eval" onclick="scrollToSection('section-eval')">
+      <span class="nav-icon n2">2</span> 经销商评估结果
+    </li>
+    <li class="nav-item" data-target="section-pss" onclick="scrollToSection('section-pss')">
+      <span class="nav-icon n3">3</span> 进销存看板
+    </li>
+    <li class="nav-item" data-target="section-cost" onclick="scrollToSection('section-cost')">
+      <span class="nav-icon n4">4</span> 费用与合规经营总览
+    </li>
+    <li class="nav-item" data-target="section-other" onclick="scrollToSection('section-other')">
+      <span class="nav-icon n5">5</span> 其他指标概览
+    </li>
+  </ul>
+</nav>
+
+<div class="main-content">
 
 <div class="header">
   <div class="header-left">
@@ -245,7 +450,7 @@
   <div class="time" id="currentTime"></div>
 </div>
 
-<div class="section-title">经销商基础信息</div>
+<div class="section-title" id="section-basic">经销商基础信息</div>
 <div class="info-grid">
   <div class="info-item">
     <span class="label">开户时间</span>
@@ -269,7 +474,7 @@
   </div>
 </div>
 
-<div class="section-title">经销商评估结果</div>
+<div class="section-title" id="section-eval">经销商评估结果</div>
 
 <div class="quarter-filter-row">
   <select class="quarter-select" id="quarterSelect">
@@ -366,7 +571,20 @@
 
 </div>
 
-<div class="section-title">进销存概览</div>
+<div class="section-title" id="section-pss">进销存看板</div>
+
+<div class="item-filter-row">
+  <span class="item-filter-label">品项筛选</span>
+  <div class="item-filter-pills" id="itemFilter">
+    <span class="item-pill active" data-item="全部">全部</span>
+    <span class="item-pill" data-item="电解质水">电解质水</span>
+    <span class="item-pill" data-item="气泡水">气泡水</span>
+    <span class="item-pill" data-item="冰茶">冰茶</span>
+    <span class="item-pill" data-item="维生素水">维生素水</span>
+    <span class="item-pill" data-item="好自在">好自在</span>
+    <span class="item-pill" data-item="其他">其他</span>
+  </div>
+</div>
 
 <div class="pss-grid">
   <!-- 履约卡片 -->
@@ -437,20 +655,20 @@
   <tr><td class="col-result">箱数</td><td>3,200</td><td>3,100</td><td>2,950</td><td>3,350</td><td>3,400</td><td>3,500</td><td>3,600</td><td>3,550</td><td>3,450</td><td>3,380</td><td>3,300</td><td>3,250</td></tr>
   <tr><td class="col-result">同比</td><td class="pss-hl">+12%</td><td class="pss-hl">+10%</td><td>+5%</td><td class="pss-hl">+15%</td><td class="pss-hl">+18%</td><td class="pss-hl">+12%</td><td class="pss-hl">+10%</td><td>+8%</td><td class="pss-hl">+11%</td><td>+6%</td><td class="pss-hl">+9%</td><td>+4%</td></tr>
   <tr><td class="col-result">直销网点数</td><td>85</td><td>82</td><td>80</td><td>88</td><td>90</td><td>92</td><td>95</td><td>93</td><td>90</td><td>88</td><td>86</td><td>84</td></tr>
-  <tr><td class="col-result">%</td><td>42%</td><td>41%</td><td>40%</td><td>43%</td><td>44%</td><td>45%</td><td>46%</td><td>45%</td><td>44%</td><td>43%</td><td>42%</td><td>41%</td></tr>
+  <tr><td class="col-result">直销网点箱数占比</td><td>42%</td><td>41%</td><td>40%</td><td>43%</td><td>44%</td><td>45%</td><td>46%</td><td>45%</td><td>44%</td><td>43%</td><td>42%</td><td>41%</td></tr>
   <tr><td class="col-result">同比</td><td class="pss-hl">+8%</td><td class="pss-hl">+6%</td><td>+3%</td><td class="pss-hl">+10%</td><td class="pss-hl">+12%</td><td class="pss-hl">+8%</td><td class="pss-hl">+7%</td><td>+5%</td><td class="pss-hl">+8%</td><td>+4%</td><td class="pss-hl">+6%</td><td>+2%</td></tr>
   <tr><td class="col-result">VPO</td><td>2.8</td><td>2.7</td><td>2.6</td><td>2.9</td><td>3.0</td><td>3.1</td><td>3.2</td><td>3.0</td><td>2.9</td><td>2.8</td><td>2.7</td><td>2.8</td></tr>
   <tr><td class="col-result">分销批发商数</td><td>12</td><td>12</td><td>11</td><td>13</td><td>13</td><td>14</td><td>14</td><td>14</td><td>13</td><td>13</td><td>12</td><td>12</td></tr>
-  <tr><td class="col-result">%</td><td>30%</td><td>30%</td><td>28%</td><td>32%</td><td>32%</td><td>34%</td><td>34%</td><td>34%</td><td>32%</td><td>32%</td><td>30%</td><td>30%</td></tr>
+  <tr><td class="col-result">分销批发商箱数占比</td><td>30%</td><td>30%</td><td>28%</td><td>32%</td><td>32%</td><td>34%</td><td>34%</td><td>34%</td><td>32%</td><td>32%</td><td>30%</td><td>30%</td></tr>
   <tr><td class="col-result">同比</td><td>+5%</td><td>+5%</td><td>0%</td><td class="pss-hl">+8%</td><td class="pss-hl">+8%</td><td class="pss-hl">+10%</td><td class="pss-hl">+10%</td><td class="pss-hl">+8%</td><td>+5%</td><td>+5%</td><td>0%</td><td>0%</td></tr>
   <tr><td class="col-result">分销分销商数</td><td>45</td><td>44</td><td>42</td><td>47</td><td>48</td><td>50</td><td>52</td><td>50</td><td>48</td><td>47</td><td>45</td><td>44</td></tr>
-  <tr><td class="col-result">%</td><td>55%</td><td>54%</td><td>52%</td><td>56%</td><td>57%</td><td>58%</td><td>60%</td><td>58%</td><td>57%</td><td>56%</td><td>55%</td><td>54%</td></tr>
+  <tr><td class="col-result">分销分销商箱数占比</td><td>55%</td><td>54%</td><td>52%</td><td>56%</td><td>57%</td><td>58%</td><td>60%</td><td>58%</td><td>57%</td><td>56%</td><td>55%</td><td>54%</td></tr>
   <tr><td class="col-result">同比</td><td class="pss-hl">+10%</td><td class="pss-hl">+8%</td><td>+5%</td><td class="pss-hl">+12%</td><td class="pss-hl">+14%</td><td class="pss-hl">+10%</td><td class="pss-hl">+8%</td><td>+6%</td><td class="pss-hl">+9%</td><td>+5%</td><td class="pss-hl">+7%</td><td>+3%</td></tr>
   <tr><td class="col-result">自营箱数</td><td>1,280</td><td>1,240</td><td>1,180</td><td>1,340</td><td>1,360</td><td>1,400</td><td>1,440</td><td>1,420</td><td>1,380</td><td>1,350</td><td>1,320</td><td>1,300</td></tr>
-  <tr><td class="col-result">%</td><td>40%</td><td>40%</td><td>40%</td><td>40%</td><td>40%</td><td>40%</td><td>40%</td><td>40%</td><td>40%</td><td>40%</td><td>40%</td><td>40%</td></tr>
+  <tr><td class="col-result">自营箱数占比</td><td>40%</td><td>40%</td><td>40%</td><td>40%</td><td>40%</td><td>40%</td><td>40%</td><td>40%</td><td>40%</td><td>40%</td><td>40%</td><td>40%</td></tr>
   <tr><td class="col-result">同比</td><td class="pss-hl">+15%</td><td class="pss-hl">+12%</td><td>+8%</td><td class="pss-hl">+18%</td><td class="pss-hl">+20%</td><td class="pss-hl">+15%</td><td class="pss-hl">+12%</td><td class="pss-hl">+10%</td><td class="pss-hl">+14%</td><td>+8%</td><td class="pss-hl">+10%</td><td>+6%</td></tr>
-  <tr><td class="col-result">其他</td><td>640</td><td>620</td><td>590</td><td>670</td><td>680</td><td>700</td><td>720</td><td>710</td><td>690</td><td>675</td><td>660</td><td>650</td></tr>
-  <tr><td class="col-result">%</td><td>20%</td><td>20%</td><td>20%</td><td>20%</td><td>20%</td><td>20%</td><td>20%</td><td>20%</td><td>20%</td><td>20%</td><td>20%</td><td>20%</td></tr>
+  <tr><td class="col-result">其他箱数</td><td>640</td><td>620</td><td>590</td><td>670</td><td>680</td><td>700</td><td>720</td><td>710</td><td>690</td><td>675</td><td>660</td><td>650</td></tr>
+  <tr><td class="col-result">其他箱数占比</td><td>20%</td><td>20%</td><td>20%</td><td>20%</td><td>20%</td><td>20%</td><td>20%</td><td>20%</td><td>20%</td><td>20%</td><td>20%</td><td>20%</td></tr>
   <tr><td class="col-result">同比</td><td>+5%</td><td>+5%</td><td>+2%</td><td class="pss-hl">+8%</td><td class="pss-hl">+10%</td><td class="pss-hl">+6%</td><td>+5%</td><td>+3%</td><td class="pss-hl">+7%</td><td>+2%</td><td>+4%</td><td>0%</td></tr>
   </tbody>
   </table></div></div>
@@ -473,7 +691,7 @@
   </table></div></div>
 </div>
 
-<div class="section-title">费用与合规经营总览</div>
+<div class="section-title" id="section-cost">费用与合规经营总览</div>
 
 <div class="cost-grid">
   <!-- 返利 -->
@@ -496,7 +714,7 @@
 
   <!-- 费用 -->
   <div class="card pss-card" onclick="document.getElementById('detail-expense').scrollIntoView({behavior:'smooth',block:'start'})">
-    <div class="pss-card-title t-expense">费用</div>
+    <div class="pss-card-title t-expense">财年费用情况</div>
     <div class="pss-rows">
       <div class="pss-row"><span class="pss-label">未结案总额</span><span class="pss-value">¥128,000</span></div>
       <div class="pss-row"><span class="pss-label">结案总额</span><span class="pss-value">¥856,000</span></div>
@@ -507,7 +725,7 @@
 
   <!-- 合规经营 -->
   <div class="card pss-card" onclick="document.getElementById('detail-comply').scrollIntoView({behavior:'smooth',block:'start'})">
-    <div class="pss-card-title t-comply">合规经营</div>
+    <div class="pss-card-title t-comply">财年合规经营情况</div>
     <div class="pss-rows">
       <div class="pss-row"><span class="pss-label">窜货处罚金额</span><span class="pss-value" style="color:#ef4444;">¥32,000</span></div>
       <div class="pss-row"><span class="pss-label">虚假费用处罚金额</span><span class="pss-value" style="color:#ef4444;">¥18,500</span></div>
@@ -524,9 +742,9 @@
   <thead><tr><th>月</th><th>12</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th></tr></thead>
   <tbody>
   <tr><td class="col-result">常规返利</td><td>8.2</td><td>7.8</td><td>7.5</td><td>8.5</td><td>8.8</td><td>9.0</td><td>9.2</td><td>8.8</td><td>8.5</td><td>8.2</td><td>8.0</td><td>8.3</td></tr>
-  <tr><td class="col-result">%</td><td>3.5%</td><td>3.4%</td><td>3.3%</td><td>3.5%</td><td>3.6%</td><td>3.7%</td><td>3.8%</td><td>3.7%</td><td>3.6%</td><td>3.5%</td><td>3.4%</td><td>3.5%</td></tr>
+  <tr><td class="col-result">常规返利返利比例</td><td>3.5%</td><td>3.4%</td><td>3.3%</td><td>3.5%</td><td>3.6%</td><td>3.7%</td><td>3.8%</td><td>3.7%</td><td>3.6%</td><td>3.5%</td><td>3.4%</td><td>3.5%</td></tr>
   <tr><td class="col-result">额外返利</td><td>1.5</td><td>1.3</td><td>1.2</td><td>1.6</td><td>1.8</td><td>1.7</td><td>1.9</td><td>1.6</td><td>1.5</td><td>1.4</td><td>1.3</td><td>1.5</td></tr>
-  <tr><td class="col-result">%</td><td>0.6%</td><td>0.6%</td><td>0.5%</td><td>0.7%</td><td>0.7%</td><td>0.7%</td><td>0.8%</td><td>0.7%</td><td>0.6%</td><td>0.6%</td><td>0.6%</td><td>0.6%</td></tr>
+  <tr><td class="col-result">额外返利返利比例</td><td>0.6%</td><td>0.6%</td><td>0.5%</td><td>0.7%</td><td>0.7%</td><td>0.7%</td><td>0.8%</td><td>0.7%</td><td>0.6%</td><td>0.6%</td><td>0.6%</td><td>0.6%</td></tr>
   </tbody>
   </table></div></div>
 </div>
@@ -538,7 +756,7 @@
   <thead><tr><th>月</th><th>12</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th></tr></thead>
   <tbody>
   <tr><td class="col-result">实际金额</td><td>48.0</td><td>46.0</td><td>42.0</td><td>50.0</td><td>53.0</td><td>54.0</td><td>56.0</td><td>53.0</td><td>50.0</td><td>47.0</td><td>45.0</td><td>48.0</td></tr>
-  <tr><td class="col-result">%</td><td>96%</td><td>96%</td><td>93%</td><td>96%</td><td>96%</td><td>98%</td><td>97%</td><td>96%</td><td>96%</td><td>94%</td><td>94%</td><td>96%</td></tr>
+  <tr><td class="col-result">预付款比例</td><td>96%</td><td>96%</td><td>93%</td><td>96%</td><td>96%</td><td>98%</td><td>97%</td><td>96%</td><td>96%</td><td>94%</td><td>94%</td><td>96%</td></tr>
   </tbody>
   </table></div></div>
 </div>
@@ -564,18 +782,18 @@
   <thead><tr><th>月</th><th>12</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th></tr></thead>
   <tbody>
   <tr><td class="col-result">窜货次数</td><td>3</td><td>4</td><td>2</td><td>5</td><td>3</td><td>4</td><td>3</td><td>4</td><td>3</td><td>2</td><td>3</td><td>4</td></tr>
-  <tr><td class="col-result">金额</td><td>2,800</td><td>3,200</td><td>2,500</td><td>3,500</td><td>3,000</td><td>2,800</td><td>3,200</td><td>3,000</td><td>2,600</td><td>2,400</td><td>2,800</td><td>3,000</td></tr>
+  <tr><td class="col-result">窜货金额</td><td>2,800</td><td>3,200</td><td>2,500</td><td>3,500</td><td>3,000</td><td>2,800</td><td>3,200</td><td>3,000</td><td>2,600</td><td>2,400</td><td>2,800</td><td>3,000</td></tr>
   <tr><td class="col-result">虚假费用次数</td><td>2</td><td>3</td><td>1</td><td>3</td><td>2</td><td>2</td><td>3</td><td>2</td><td>2</td><td>1</td><td>2</td><td>2</td></tr>
-  <tr><td class="col-result">金额</td><td>1,500</td><td>1,800</td><td>1,200</td><td>2,000</td><td>1,600</td><td>1,400</td><td>1,850</td><td>1,700</td><td>1,300</td><td>1,100</td><td>1,500</td><td>1,600</td></tr>
+  <tr><td class="col-result">虚假费用金额</td><td>1,500</td><td>1,800</td><td>1,200</td><td>2,000</td><td>1,600</td><td>1,400</td><td>1,850</td><td>1,700</td><td>1,300</td><td>1,100</td><td>1,500</td><td>1,600</td></tr>
   <tr><td class="col-result">进销存处罚次数</td><td>1</td><td>1</td><td>1</td><td>2</td><td>1</td><td>1</td><td>2</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>
-  <tr><td class="col-result">金额</td><td>800</td><td>600</td><td>500</td><td>900</td><td>700</td><td>650</td><td>800</td><td>750</td><td>550</td><td>500</td><td>700</td><td>800</td></tr>
+  <tr><td class="col-result">进销存处罚金额</td><td>800</td><td>600</td><td>500</td><td>900</td><td>700</td><td>650</td><td>800</td><td>750</td><td>550</td><td>500</td><td>700</td><td>800</td></tr>
   <tr><td class="col-result">低价次数</td><td>0</td><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td></tr>
-  <tr><td class="col-result">金额</td><td>0</td><td>800</td><td>0</td><td>1,200</td><td>0</td><td>0</td><td>900</td><td>0</td><td>0</td><td>0</td><td>700</td><td>0</td></tr>
+  <tr><td class="col-result">低价金额</td><td>0</td><td>800</td><td>0</td><td>1,200</td><td>0</td><td>0</td><td>900</td><td>0</td><td>0</td><td>0</td><td>700</td><td>0</td></tr>
   </tbody>
   </table></div></div>
 </div>
 
-<div class="section-title">其他指标概览</div>
+<div class="section-title" id="section-other">其他指标概览</div>
 
 <div class="other-grid">
   <div class="card pss-card" onclick="document.getElementById('detail-outlet').scrollIntoView({behavior:'smooth',block:'start'})">
@@ -587,7 +805,7 @@
     </div>
   </div>
   <div class="card pss-card" onclick="document.getElementById('detail-break').scrollIntoView({behavior:'smooth',block:'start'})">
-    <div class="pss-card-title t-profit">利润</div>
+    <div class="pss-card-title t-profit">财年利润情况</div>
     <div class="pss-rows">
       <div class="pss-row"><span class="pss-label">共识净利润率</span><span class="pss-value pss-hl">8.5%</span></div>
       <div class="pss-row"><span class="pss-label">共识毛利率</span><span class="pss-value pss-hl">22.3%</span></div>
@@ -603,13 +821,11 @@
   <tbody>
   <tr><td class="col-result">合作网点数</td><td>1,250</td><td>1,260</td><td>1,255</td><td>1,270</td><td>1,275</td><td>1,280</td><td>1,280</td><td>1,278</td><td>1,270</td><td>1,265</td><td>1,272</td><td>1,280</td></tr>
   <tr><td class="col-result">活跃网点数</td><td>980</td><td>995</td><td>990</td><td>1,010</td><td>1,020</td><td>1,025</td><td>1,030</td><td>1,022</td><td>1,015</td><td>1,005</td><td>1,012</td><td>1,018</td></tr>
-  <tr><td class="col-result">%</td><td>78%</td><td>79%</td><td>79%</td><td>80%</td><td>80%</td><td>80%</td><td>80%</td><td>80%</td><td>80%</td><td>79%</td><td>80%</td><td>80%</td></tr>
-  <tr><td class="col-result">优质网点数</td><td>420</td><td>430</td><td>425</td><td>445</td><td>450</td><td>455</td><td>460</td><td>458</td><td>450</td><td>445</td><td>448</td><td>455</td></tr>
-  <tr><td class="col-result">%</td><td>34%</td><td>34%</td><td>34%</td><td>35%</td><td>35%</td><td>36%</td><td>36%</td><td>36%</td><td>35%</td><td>35%</td><td>35%</td><td>36%</td></tr>
+  <tr><td class="col-result">活跃网点数占比</td><td>78%</td><td>79%</td><td>79%</td><td>80%</td><td>80%</td><td>80%</td><td>80%</td><td>80%</td><td>80%</td><td>79%</td><td>80%</td><td>80%</td></tr>
   <tr><td class="col-result">陈列网点数</td><td>650</td><td>660</td><td>655</td><td>675</td><td>680</td><td>685</td><td>690</td><td>688</td><td>680</td><td>672</td><td>678</td><td>685</td></tr>
-  <tr><td class="col-result">%</td><td>52%</td><td>52%</td><td>52%</td><td>53%</td><td>53%</td><td>54%</td><td>54%</td><td>54%</td><td>54%</td><td>53%</td><td>53%</td><td>54%</td></tr>
-  <tr><td class="col-result">冰柜网点数</td><td>380</td><td>385</td><td>382</td><td>395</td><td>400</td><td>405</td><td>408</td><td>405</td><td>398</td><td>392</td><td>395</td><td>400</td></tr>
-  <tr><td class="col-result">%</td><td>30%</td><td>31%</td><td>30%</td><td>31%</td><td>31%</td><td>32%</td><td>32%</td><td>32%</td><td>31%</td><td>31%</td><td>31%</td><td>31%</td></tr>
+  <tr><td class="col-result">陈列网点数占比</td><td>52%</td><td>52%</td><td>52%</td><td>53%</td><td>53%</td><td>54%</td><td>54%</td><td>54%</td><td>54%</td><td>53%</td><td>53%</td><td>54%</td></tr>
+  <tr><td class="col-result">资产网点数</td><td>380</td><td>385</td><td>382</td><td>395</td><td>400</td><td>405</td><td>408</td><td>405</td><td>398</td><td>392</td><td>395</td><td>400</td></tr>
+  <tr><td class="col-result">资产网点数占比</td><td>30%</td><td>31%</td><td>30%</td><td>31%</td><td>31%</td><td>32%</td><td>32%</td><td>32%</td><td>31%</td><td>31%</td><td>31%</td><td>31%</td></tr>
   </tbody>
   </table></div></div>
 </div>
@@ -620,9 +836,9 @@
   <div class="card"><div class="detail-table-wrap"><table class="detail-table">
   <thead><tr><th>月</th><th>12</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th></tr></thead>
   <tbody>
-  <tr><td class="col-result">冰柜数</td><td>1,250</td><td>1,260</td><td>1,258</td><td>1,280</td><td>1,290</td><td>1,300</td><td>1,310</td><td>1,305</td><td>1,295</td><td>1,285</td><td>1,290</td><td>1,300</td></tr>
+  <tr><td class="col-result">资产数</td><td>1,250</td><td>1,260</td><td>1,258</td><td>1,280</td><td>1,290</td><td>1,300</td><td>1,310</td><td>1,305</td><td>1,295</td><td>1,285</td><td>1,290</td><td>1,300</td></tr>
   <tr><td class="col-result">绑定资产数</td><td>3,450</td><td>3,480</td><td>3,500</td><td>3,520</td><td>3,540</td><td>3,560</td><td>3,560</td><td>3,550</td><td>3,530</td><td>3,510</td><td>3,520</td><td>3,540</td></tr>
-  <tr><td class="col-result">90天内巡检数</td><td>1,120</td><td>1,140</td><td>1,135</td><td>1,160</td><td>1,175</td><td>1,185</td><td>1,190</td><td>1,180</td><td>1,165</td><td>1,150</td><td>1,155</td><td>1,170</td></tr>
+  <tr><td class="col-result">90天内未巡检数</td><td>1,120</td><td>1,140</td><td>1,135</td><td>1,160</td><td>1,175</td><td>1,185</td><td>1,190</td><td>1,180</td><td>1,165</td><td>1,150</td><td>1,155</td><td>1,170</td></tr>
   </tbody>
   </table></div></div>
 </div>
@@ -631,14 +847,14 @@
 <div class="pss-detail" id="detail-staff">
   <div class="pss-detail-title">销售人员明细</div>
   <div class="card"><div class="detail-table-wrap"><table class="detail-table">
-  <thead><tr><th>月</th><th>12</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th></tr></thead>
+  <thead><tr><th>姓名</th><th>岗位名称</th><th>12月订单箱数</th><th>1月订单箱数</th><th>2月订单箱数</th><th>3月订单箱数</th><th>4月订单箱数</th><th>5月订单箱数</th><th>6月订单箱数</th><th>7月订单箱数</th><th>8月订单箱数</th><th>9月订单箱数</th><th>10月订单箱数</th><th>11月订单箱数</th></tr></thead>
   <tbody>
-  <tr><td class="col-result">张建国</td><td>1,050</td><td>1,020</td><td>980</td><td>1,100</td><td>1,120</td><td>1,150</td><td>1,180</td><td>1,160</td><td>1,130</td><td>1,100</td><td>1,080</td><td>1,100</td></tr>
-  <tr><td class="col-result">李明辉</td><td>980</td><td>960</td><td>920</td><td>1,020</td><td>1,050</td><td>1,080</td><td>1,100</td><td>1,090</td><td>1,060</td><td>1,030</td><td>1,010</td><td>1,030</td></tr>
-  <tr><td class="col-result">王永强</td><td>920</td><td>900</td><td>860</td><td>950</td><td>980</td><td>1,000</td><td>1,020</td><td>1,010</td><td>980</td><td>960</td><td>940</td><td>960</td></tr>
-  <tr><td class="col-result">陈晓东</td><td>880</td><td>860</td><td>820</td><td>910</td><td>930</td><td>950</td><td>970</td><td>960</td><td>930</td><td>910</td><td>890</td><td>910</td></tr>
-  <tr><td class="col-result">赵文博</td><td>850</td><td>830</td><td>790</td><td>880</td><td>900</td><td>920</td><td>940</td><td>930</td><td>900</td><td>880</td><td>860</td><td>880</td></tr>
-  <tr style="border-top:2px solid #d1d5db;"><td class="col-result" style="font-weight:700;">人均分销箱数</td><td>936</td><td>914</td><td>874</td><td>972</td><td>996</td><td>1,020</td><td>1,042</td><td>1,030</td><td>1,000</td><td>976</td><td>956</td><td>976</td></tr>
+  <tr><td class="col-result">张建国</td><td>区域经理</td><td>1,050</td><td>1,020</td><td>980</td><td>1,100</td><td>1,120</td><td>1,150</td><td>1,180</td><td>1,160</td><td>1,130</td><td>1,100</td><td>1,080</td><td>1,100</td></tr>
+  <tr><td class="col-result">李明辉</td><td>销售主管</td><td>980</td><td>960</td><td>920</td><td>1,020</td><td>1,050</td><td>1,080</td><td>1,100</td><td>1,090</td><td>1,060</td><td>1,030</td><td>1,010</td><td>1,030</td></tr>
+  <tr><td class="col-result">王永强</td><td>高级销售代表</td><td>920</td><td>900</td><td>860</td><td>950</td><td>980</td><td>1,000</td><td>1,020</td><td>1,010</td><td>980</td><td>960</td><td>940</td><td>960</td></tr>
+  <tr><td class="col-result">陈晓东</td><td>销售代表</td><td>880</td><td>860</td><td>820</td><td>910</td><td>930</td><td>950</td><td>970</td><td>960</td><td>930</td><td>910</td><td>890</td><td>910</td></tr>
+  <tr><td class="col-result">赵文博</td><td>销售代表</td><td>850</td><td>830</td><td>790</td><td>880</td><td>900</td><td>920</td><td>940</td><td>930</td><td>900</td><td>880</td><td>860</td><td>880</td></tr>
+  <tr style="border-top:2px solid #d1d5db;"><td class="col-result" style="font-weight:700;">人均分销箱数</td><td>-</td><td>936</td><td>914</td><td>874</td><td>972</td><td>996</td><td>1,020</td><td>1,042</td><td>1,030</td><td>1,000</td><td>976</td><td>956</td><td>976</td></tr>
   </tbody>
   </table></div></div>
 </div>
@@ -659,30 +875,6 @@
   </table></div></div>
 </div>
 
-<!-- 会员等级明细 -->
-<div class="pss-detail" id="detail-member">
-  <div class="pss-detail-title">会员等级明细</div>
-  <div class="card"><div class="detail-table-wrap"><table class="detail-table">
-  <thead><tr><th>季</th><th>2026F1</th><th>2026F2</th><th>2026F3</th><th>2026F4</th></tr></thead>
-  <tbody>
-  <tr><td class="col-result">等级</td><td>B</td><td>B</td><td>A</td><td>A</td></tr>
-  <tr><td class="col-result">分数</td><td>68</td><td>72</td><td>78</td><td>82</td></tr>
-  </tbody>
-  </table></div></div>
-</div>
-
-<!-- 整改明细 -->
-<div class="pss-detail" id="detail-rectify">
-  <div class="pss-detail-title">整改明细</div>
-  <div class="card"><div class="detail-table-wrap"><table class="detail-table">
-  <thead><tr><th>季</th><th>2026F1</th><th>2026F2</th><th>2026F3</th><th>2026F4</th></tr></thead>
-  <tbody>
-  <tr><td class="col-result">是否整改</td><td>是</td><td>否</td><td>是</td><td>否</td></tr>
-  <tr><td class="col-result">整改项</td><td>窜货管控</td><td>—</td><td>库存盘点</td><td>—</td></tr>
-  <tr><td class="col-result">整改结果</td><td class="pss-hl">已通过</td><td>—</td><td class="pss-hl">已通过</td><td>—</td></tr>
-  </tbody>
-  </table></div></div>
-</div>
 
 <script>
 function updateTime() {
@@ -967,6 +1159,201 @@ window.addEventListener('resize', function() {
   radarChart.resize();
   detailRadarChart.resize();
 });
+</script>
+
+</div><!-- /.main-content -->
+
+<script>
+// ===== 侧边栏导航 =====
+function scrollToSection(id) {
+  var el = document.getElementById(id);
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
+// Scroll spy：根据滚动位置高亮当前导航项
+(function() {
+  var navItems = document.querySelectorAll('.nav-item');
+  var sections = [];
+  navItems.forEach(function(item) {
+    var targetId = item.getAttribute('data-target');
+    var el = document.getElementById(targetId);
+    if (el) sections.push({ nav: item, el: el });
+  });
+
+  function updateActive() {
+    var scrollY = window.pageYOffset || document.documentElement.scrollTop;
+    var winH = window.innerHeight;
+    var found = null;
+
+    sections.forEach(function(sec) {
+      var rect = sec.el.getBoundingClientRect();
+      // 当 section 标题进入视口上部 30% 区域时激活
+      if (rect.top <= winH * 0.35) {
+        found = sec;
+      }
+    });
+
+    // 如果滚动到底部附近，激活最后一个
+    if (!found) {
+      var docH = document.documentElement.scrollHeight;
+      if (scrollY + winH >= docH - 50) {
+        found = sections[sections.length - 1];
+      } else {
+        found = sections[0];
+      }
+    }
+
+    navItems.forEach(function(item) { item.classList.remove('active'); });
+    if (found) found.nav.classList.add('active');
+  }
+
+  window.addEventListener('scroll', updateActive, { passive: true });
+  updateActive();
+})();
+
+// ===== 品项筛选（单选）=====
+document.querySelectorAll('#itemFilter .item-pill').forEach(function(pill) {
+  pill.addEventListener('click', function() {
+    document.querySelectorAll('#itemFilter .item-pill').forEach(function(p) {
+      p.classList.remove('active');
+    });
+    pill.classList.add('active');
+    renderPss(pill.getAttribute('data-item'));
+  });
+});
+</script>
+
+<script>
+// ===== 进销存品项筛选（数据联动）=====
+var PSS_FACTORS = { '全部': 1, '电解质水': 0.35, '气泡水': 0.22, '冰茶': 0.15, '维生素水': 0.12, '好自在': 0.10, '其他': 0.06 };
+var PSS_MONTH_HEAD = '<thead><tr><th>月</th><th>12</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th></tr></thead>';
+var PSS_QUARTER_HEAD = '<thead><tr><th>季</th><th>2026F1</th><th>2026F2</th><th>2026F3</th><th>2026F4</th></tr></thead>';
+
+// 基础数据（=「全部」）。scale: 量值类按品项系数缩放；hl: 绿色高亮
+var PSS_CARDS = {
+  fulfill: { id: 'detail-fulfill', title: '履约', cls: 't-fulfill', rows: [
+    { l: '当月进货实际金额', v: 1280000, f: 'money', scale: 1 },
+    { l: '当月目标达成率', v: 96, f: 'pct', hl: 1 },
+    { l: '同比增长率', v: 12, f: 'yoy', hl: 1 },
+    { l: '当季度进货实际金额', v: 3520000, f: 'money', scale: 1 },
+    { l: '当季度目标达成率', v: 92, f: 'pct', hl: 1 },
+    { l: '同比增长率', v: 8, f: 'yoy', hl: 1 }
+  ]},
+  sales: { id: 'detail-sales', title: '卖货', cls: 't-sales', rows: [
+    { l: '当月卖货箱数', v: 3200, f: 'box', scale: 1 },
+    { l: '同比增长率', v: 15, f: 'yoy', hl: 1 },
+    { l: '当季度卖货箱数', v: 9100, f: 'box', scale: 1 },
+    { l: '同比增长率', v: 10, f: 'yoy', hl: 1 }
+  ]},
+  stock: { id: 'detail-stock', title: '库存', cls: 't-stock', rows: [
+    { l: '最近盘点日实盘箱数', v: 8500, f: 'box', scale: 1 },
+    { l: '最近盘点日库存天数', v: 32, f: 'days' },
+    { l: '最近盘点日绿牌占比', v: 85, f: 'pct', hl: 1 }
+  ]}
+};
+
+var PSS_FULFILL_MONTH = [
+  { l: '目标（万元）', f: 'wan', scale: 1, v: [135,130,125,140,145,150,155,150,145,140,135,130] },
+  { l: '实际（万元）', f: 'wan', scale: 1, v: [126,125,118,132,141,148,152,147,142,135,130,125] },
+  { l: '达成率', f: 'pct', hl: 1, v: [93,96,94,94,97,99,98,98,98,96,96,96] },
+  { l: '同比', f: 'yoy', hl: 1, v: [8,11,4,12,15,10,9,6,10,5,7,3] }
+];
+var PSS_FULFILL_QUARTER = [
+  { l: '目标（万元）', f: 'wan', scale: 1, v: [1350,1440,1530,1390] },
+  { l: '实际（万元）', f: 'wan', scale: 1, v: [1235,1395,1498,1320] },
+  { l: '达成率', f: 'pct', hl: 1, v: [91,97,98,95] },
+  { l: '同比', f: 'yoy', hl: 1, v: [8,12,10,5] }
+];
+var PSS_SALES = [
+  { l: '箱数', f: 'box', scale: 1, v: [3200,3100,2950,3350,3400,3500,3600,3550,3450,3380,3300,3250] },
+  { l: '同比', f: 'yoy', hl: 1, v: [12,10,5,15,18,12,10,8,11,6,9,4] },
+  { l: '直销网点数', f: 'count', scale: 1, v: [85,82,80,88,90,92,95,93,90,88,86,84] },
+  { l: '直销网点箱数占比', f: 'pct', v: [42,41,40,43,44,45,46,45,44,43,42,41] },
+  { l: '同比', f: 'yoy', hl: 1, v: [8,6,3,10,12,8,7,5,8,4,6,2] },
+  { l: 'VPO', f: 'vpo', v: [2.8,2.7,2.6,2.9,3.0,3.1,3.2,3.0,2.9,2.8,2.7,2.8] },
+  { l: '分销批发商数', f: 'count', scale: 1, v: [12,12,11,13,13,14,14,14,13,13,12,12] },
+  { l: '分销批发商箱数占比', f: 'pct', v: [30,30,28,32,32,34,34,34,32,32,30,30] },
+  { l: '同比', f: 'yoy', v: [5,5,0,8,8,10,10,8,5,5,0,0] },
+  { l: '分销分销商数', f: 'count', scale: 1, v: [45,44,42,47,48,50,52,50,48,47,45,44] },
+  { l: '分销分销商箱数占比', f: 'pct', v: [55,54,52,56,57,58,60,58,57,56,55,54] },
+  { l: '同比', f: 'yoy', hl: 1, v: [10,8,5,12,14,10,8,6,9,5,7,3] },
+  { l: '自营箱数', f: 'box', scale: 1, v: [1280,1240,1180,1340,1360,1400,1440,1420,1380,1350,1320,1300] },
+  { l: '自营箱数占比', f: 'pct', v: [40,40,40,40,40,40,40,40,40,40,40,40] },
+  { l: '同比', f: 'yoy', hl: 1, v: [15,12,8,18,20,15,12,10,14,8,10,6] },
+  { l: '其他箱数', f: 'box', scale: 1, v: [640,620,590,670,680,700,720,710,690,675,660,650] },
+  { l: '其他箱数占比', f: 'pct', v: [20,20,20,20,20,20,20,20,20,20,20,20] },
+  { l: '同比', f: 'yoy', v: [5,5,2,8,10,6,5,3,7,2,4,0] }
+];
+var PSS_STOCK = [
+  { l: '箱数', f: 'box', scale: 1, v: [8500,8200,7800,8000,8300,8600,8500,8400,8200,8100,8300,8500] },
+  { l: '天数', f: 'days', v: [32,30,28,30,31,33,32,31,30,29,30,31] },
+  { l: '绿牌占比', f: 'pct', hl: 1, v: [85,82,88,86,84,87,85,83,86,88,85,84] },
+  { l: '库存差异率', f: 'diff', v: [2.1,1.8,2.5,2.0,1.9,1.6,2.2,2.3,1.8,2.0,2.1,1.9] },
+  { l: '同期箱数', f: 'box', scale: 1, v: [7800,7500,7200,7400,7600,7900,7800,7700,7500,7400,7600,7800] },
+  { l: '同期天数', f: 'days', v: [35,33,31,32,34,36,35,34,32,31,33,34] },
+  { l: '同期绿牌占比', f: 'pct', v: [80,78,82,81,79,83,80,79,81,83,80,79] }
+];
+
+function pssFmt(v, f) {
+  if (f === 'money') return '¥' + v.toLocaleString('en-US');
+  if (f === 'wan' || f === 'box' || f === 'count') return v.toLocaleString('en-US');
+  if (f === 'days') return v + ' 天';
+  if (f === 'vpo') return v.toFixed(1);
+  if (f === 'pct') return v + '%';
+  if (f === 'yoy') return (v > 0 ? '+' : '') + v + '%';
+  if (f === 'diff') return v.toFixed(1) + '%';
+  return String(v);
+}
+function pssVal(v, factor, scale) { return scale ? Math.round(v * factor) : v; }
+
+function pssCardsHtml(factor) {
+  var order = ['fulfill', 'sales', 'stock'], html = '';
+  order.forEach(function(key) {
+    var c = PSS_CARDS[key];
+    html += '<div class="card pss-card" onclick="document.getElementById(\'' + c.id + '\').scrollIntoView({behavior:\'smooth\',block:\'start\'})">';
+    html += '<div class="pss-card-title ' + c.cls + '">' + c.title + '</div><div class="pss-rows">';
+    c.rows.forEach(function(r) {
+      var val = pssVal(r.v, factor, r.scale);
+      html += '<div class="pss-row"><span class="pss-label">' + r.l + '</span><span class="pss-value' + (r.hl ? ' pss-hl' : '') + '">' + pssFmt(val, r.f) + '</span></div>';
+    });
+    html += '</div></div>';
+  });
+  return html;
+}
+
+function pssTableHtml(rows, head, factor) {
+  var html = '<table class="detail-table">' + head + '<tbody>';
+  rows.forEach(function(r) {
+    html += '<tr><td class="col-result">' + r.l + '</td>';
+    r.v.forEach(function(v) {
+      var val = pssVal(v, factor, r.scale);
+      html += '<td' + (r.hl ? ' class="pss-hl"' : '') + '>' + pssFmt(val, r.f) + '</td>';
+    });
+    html += '</tr>';
+  });
+  html += '</tbody></table>';
+  return html;
+}
+
+function renderPss(item) {
+  var factor = (PSS_FACTORS[item] != null) ? PSS_FACTORS[item] : 1;
+  document.querySelector('.pss-grid').innerHTML = pssCardsHtml(factor);
+
+  var fulfillCards = document.querySelectorAll('#detail-fulfill .card');
+  if (fulfillCards[0]) fulfillCards[0].outerHTML = '<div class="card"><div class="detail-table-wrap">' + pssTableHtml(PSS_FULFILL_MONTH, PSS_MONTH_HEAD, factor) + '</div></div>';
+  if (fulfillCards[1]) fulfillCards[1].outerHTML = '<div class="card" style="margin-top:16px;"><div class="detail-table-wrap">' + pssTableHtml(PSS_FULFILL_QUARTER, PSS_QUARTER_HEAD, factor) + '</div></div>';
+
+  var salesCard = document.querySelector('#detail-sales .card');
+  if (salesCard) salesCard.outerHTML = '<div class="card"><div class="detail-table-wrap">' + pssTableHtml(PSS_SALES, PSS_MONTH_HEAD, factor) + '</div></div>';
+
+  var stockCard = document.querySelector('#detail-stock .card');
+  if (stockCard) stockCard.outerHTML = '<div class="card"><div class="detail-table-wrap">' + pssTableHtml(PSS_STOCK, PSS_MONTH_HEAD, factor) + '</div></div>';
+}
+
+// 初始渲染（全部）
+renderPss('全部');
 </script>
 
 </body>
